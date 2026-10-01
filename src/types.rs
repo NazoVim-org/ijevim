@@ -499,6 +499,8 @@ pub struct EditorState {
     pub scrolloff: usize,
     /// Message history (max 100 entries).
     pub message_history: VecDeque<EditorMessage>,
+    /// Show the welcome dashboard instead of an empty buffer.
+    pub show_dashboard: bool,
 }
 
 impl Default for EditorState {
@@ -529,6 +531,7 @@ impl Default for EditorState {
             expandtab: false,
             scrolloff: 0,
             message_history: VecDeque::new(),
+            show_dashboard: false,
         }
     }
 }

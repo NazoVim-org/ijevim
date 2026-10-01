@@ -62,6 +62,7 @@ impl Editor {
                         self.needs_render = true;
                     }
                     "Ex" | "Explore" => {
+                        self.engine.state.show_dashboard = false;
                         match std::env::current_dir() {
                             Ok(cwd) => {
                                 let path = cwd.to_string_lossy().to_string();
@@ -116,6 +117,7 @@ impl Editor {
                         }
                     }
                     cmd if cmd.starts_with("e ") || cmd == "e." => {
+                        self.engine.state.show_dashboard = false;
                         let path = if cmd == "e." {
                             "."
                         } else {

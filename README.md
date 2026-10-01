@@ -15,13 +15,13 @@ A minimal Vim-like TUI editor written in Rust.
 
 ```sh
 # Start with Vim keymap
-ivim vim
+ijevim vim
 
 # Start with Emacs keymap
-ivim emacs
+ijevim emacs
 
 # Open a file (defaults to Vim keymap)
-ivim <file>
+ijevim <file>
 ```
 
 ## Keybind specification

@@ -8,7 +8,7 @@ authors = ["NazoVim-org"]
 license = "MIT"
 
 [[bin]]
-name = "ivim"
+name = "ijevim"
 path = "src/main.rs"
 
 [features]
@@ -63,22 +63,22 @@ harness = false
 # ── Packaging metadata (used by cargo-deb, cargo-generate-rpm, etc.) ──
 
 [package.metadata.deb]
-maintainer = "NazoVim-org <https://github.com/NazoVim-org/ijeivm>"
+maintainer = "NazoVim-org <https://github.com/NazoVim-org/ijevim>"
 depends = ""
 extended-description = "A minimal Vim-like TUI editor written in Rust."
 section = "editors"
 priority = "optional"
 assets = [
-    ["target/release/ivim", "usr/bin/", "755"],
-    ["pkg/ivim.desktop", "usr/share/applications/", "644"],
-    ["pkg/ivim.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["target/release/ijevim", "usr/bin/", "755"],
+    ["pkg/ijevim.desktop", "usr/share/applications/", "644"],
+    ["pkg/ijevim.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
 ]
 
 [package.metadata.generate-rpm]
 assets = [
-    { source = "target/release/ivim", dest = "/usr/bin/", mode = "755" },
-    { source = "pkg/ivim.desktop", dest = "/usr/share/applications/", mode = "644" },
-    { source = "pkg/ivim.svg", dest = "/usr/share/icons/hicolor/scalable/apps/", mode = "644" },
+    { source = "target/release/ijevim", dest = "/usr/bin/", mode = "755" },
+    { source = "pkg/ijevim.desktop", dest = "/usr/share/applications/", mode = "644" },
+    { source = "pkg/ijevim.svg", dest = "/usr/share/icons/hicolor/scalable/apps/", mode = "644" },
 ]
 
 [profile.dev]

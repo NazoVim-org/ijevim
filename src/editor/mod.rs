@@ -137,7 +137,9 @@ impl Editor {
             eprintln!("Plugin loading warning: {}", e);
         }
 
+        let show_dashboard = file_path.is_none();
         let state = EditorState {
+            show_dashboard,
             file_path: buffer.file_path().map(|p| p.to_path_buf()),
             cursor: Position { line: 1, col: 0 },
             show_line_numbers: cfg.show_line_numbers,
@@ -331,6 +333,18 @@ impl Editor {
     async fn handle_key(&mut self, key: KeyCode, modifiers: KeyModifiers) {
         // Clear transient message on next key press (Vim-like behaviour).
         self.engine.state.clear_message();
+
+        // ── Dashboard mode intercept ──
+        // If the dashboard is shown, intercept keys here before the keymap
+        // handler gets involved.
+        if self.engine.state.show_dashboard {
+            if self.handle_dashboard_key(key) {
+                return;
+            }
+            // Key not consumed (fall-through): dashboard was dismissed,
+            // continue to normal key processing below.
+        }
+
         let keymap_handler = Rc::clone(&self.keymap_handler);
         // Borrow the handler, call the method to get the future, then drop the
         // borrow before awaiting. The future borrows `self` (Editor) but not
@@ -351,6 +365,90 @@ impl Editor {
     /// Expose count from operator state.
     pub fn take_count(&mut self) -> usize {
         self.engine.take_count()
+    }
+
+    // ── Dashboard key handling ─────────────────────────────────
+
+    /// Handle a key press while the welcome dashboard is shown.
+    ///
+    /// Returns `true` if the key was consumed by the dashboard.
+    /// Returns `false` if the key should fall through to normal processing
+    /// (which also dismisses the dashboard).
+    pub(crate) fn handle_dashboard_key(&mut self, key: KeyCode) -> bool {
+        match key {
+            KeyCode::Char('e') => {
+                self.engine.state.show_dashboard = false;
+                // Trigger :Ex — open file explorer in the current directory
+                match std::env::current_dir() {
+                    Ok(cwd) => {
+                        let path = cwd.to_string_lossy().to_string();
+                        if let Err(e) = self.engine.buffer_open_dir(&path) {
+                            self.engine
+                                .state
+                                .push_message(MessageLevel::Error, e);
+                        }
+                    }
+                    Err(e) => {
+                        self.engine.state.push_message(
+                            MessageLevel::Error,
+                            format!("Cannot get current directory: {}", e),
+                        );
+                    }
+                }
+                self.needs_render = true;
+                true
+            }
+            KeyCode::Char('f') => {
+                self.engine.state.show_dashboard = false;
+                // Run `git ls-files` and show results as a message, then
+                // let the user `:e <path>` to open one.
+                match crate::git::run(&["ls-files"]) {
+                    Ok(stdout) => {
+                        let files: Vec<&str> = stdout.lines().collect();
+                        if files.is_empty() {
+                            self.engine.state.push_message(
+                                MessageLevel::Info,
+                                "No tracked files in this repository".to_string(),
+                            );
+                        } else {
+                            let msg = format!(
+                                "Git-tracked files ({}): {}",
+                                files.len(),
+                                files.join(", ")
+                            );
+                            self.engine
+                                .state
+                                .push_message(MessageLevel::Info, msg);
+                        }
+                    }
+                    Err(stderr) => {
+                        self.engine.state.push_message(
+                            MessageLevel::Info,
+                            format!("Not a git repository (run :e <path> to open a file): {}", stderr),
+                        );
+                    }
+                }
+                self.needs_render = true;
+                true
+            }
+            KeyCode::Char('q') => {
+                self.handle_quit();
+                true
+            }
+            KeyCode::Char('n') | KeyCode::Esc => {
+                // Dismiss dashboard and show the empty buffer
+                self.engine.state.show_dashboard = false;
+                self.needs_render = true;
+                true
+            }
+            _ => {
+                // Any other key dismisses the dashboard and falls through
+                // to normal key processing
+                self.engine.state.show_dashboard = false;
+                self.needs_render = true;
+                false
+            }
+        }
     }
 
     // ── Methods that delegate directly to engine ────────────────
@@ -542,6 +640,7 @@ mod tests {
             expandtab: false,
             scrolloff: 0,
             message_history: VecDeque::new(),
+            show_dashboard: false,
         };
 
         Editor {

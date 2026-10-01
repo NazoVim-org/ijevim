@@ -38,7 +38,7 @@
               description = "A minimal Vim-like TUI editor written in Rust";
               homepage = "https://github.com/NazoVim-org/ijevim";
               license = pkgs.lib.licenses.mit;
-              mainProgram = "ivim";
+              mainProgram = "ijevim";
             };
           };
         };
@@ -74,7 +74,7 @@
               echo "║ Test:   cargo test                            ║"
               echo "║ Clippy: cargo clippy                          ║"
               echo "║ Audit:  cargo audit                           ║"
-              echo "║ Binary: ivim                                  ║"
+              echo "║ Binary: ijevim                                 ║"
               echo "╚═══════════════════════════════════════════════╝"
             '';
           };

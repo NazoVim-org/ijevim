@@ -7,7 +7,7 @@
 #   macOS   – tar.gz, tar.xz, .dmg  (x86_64 + arm64)
 #   Windows – .zip, .msi
 #
-# Also generates checksums.txt, a Homebrew formula (ivim.rb),
+# Also generates checksums.txt, a Homebrew formula (ijevim.rb),
 # and an Arch Linux PKGBUILD.
 
 name: Release
@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: binary-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/ivim${{ runner.os == 'Windows' && '.exe' || '' }}
+          path: target/${{ matrix.target }}/release/ijevim${{ runner.os == 'Windows' && '.exe' || '' }}
           if-no-files-found: error
 
   # ══════════════════════════════════════════════════════════════
@@ -89,7 +89,7 @@ jobs:
         with:
           name: binary-x86_64-unknown-linux-gnu
           path: target/release/
-      - run: chmod +x target/release/ivim
+      - run: chmod +x target/release/ijevim
 
       - name: Version
         id: ver
@@ -100,19 +100,19 @@ jobs:
       - name: tar.gz
         if: matrix.format == 'tar-gz'
         run: |
-          mkdir -p "archive/ivim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
-          cp target/release/ivim "$_"
-          tar czf "dist/ivim-${{ steps.ver.outputs.VERSION }}-x86_64-linux.tar.gz" \
-            -C archive "ivim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
+          mkdir -p "archive/ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
+          cp target/release/ijevim "$_"
+          tar czf "dist/ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-linux.tar.gz" \
+            -C archive "ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
 
       # ── tar.xz ──────────────────────────────────────────────────
       - name: tar.xz
         if: matrix.format == 'tar-xz'
         run: |
-          mkdir -p "archive/ivim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
-          cp target/release/ivim "$_"
-          tar cJf "dist/ivim-${{ steps.ver.outputs.VERSION }}-x86_64-linux.tar.xz" \
-            -C archive "ivim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
+          mkdir -p "archive/ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
+          cp target/release/ijevim "$_"
+          tar cJf "dist/ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-linux.tar.xz" \
+            -C archive "ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-linux"
 
       # ── deb ────────────────────────────────────────────────────
       - name: Install cargo-deb
@@ -140,7 +140,7 @@ jobs:
         if: matrix.format == 'rpm'
         run: |
           cargo generate-rpm \
-            -o "dist/ivim-${{ steps.ver.outputs.VERSION }}-1.x86_64.rpm"
+            -o "dist/ijevim-${{ steps.ver.outputs.VERSION }}-1.x86_64.rpm"
 
       # ── AppImage ───────────────────────────────────────────────
       - name: AppImage
@@ -154,14 +154,14 @@ jobs:
           mkdir -p "$APPDIR/usr/bin" \
                    "$APPDIR/usr/share/applications" \
                    "$APPDIR/usr/share/icons/hicolor/scalable/apps"
-          cp target/release/ivim        "$APPDIR/usr/bin/"
-          cp pkg/ivim.desktop          "$APPDIR/usr/share/applications/"
-          cp pkg/ivim.svg              "$APPDIR/usr/share/icons/hicolor/scalable/apps/"
+          cp target/release/ijevim        "$APPDIR/usr/bin/"
+          cp pkg/ijevim.desktop          "$APPDIR/usr/share/applications/"
+          cp pkg/ijevim.svg              "$APPDIR/usr/share/icons/hicolor/scalable/apps/"
 
           # AppRun entry point
           cat > "$APPDIR/AppRun" << 'EOF'
           #!/bin/bash
-          exec "$APPDIR/usr/bin/ivim" "$@"
+          exec "$APPDIR/usr/bin/ijevim" "$@"
           EOF
           chmod +x "$APPDIR/AppRun"
 
@@ -173,7 +173,7 @@ jobs:
 
           # Build AppImage
           ARCH=x86_64 ./squashfs-root/AppRun "$APPDIR" \
-            "dist/ivim-${VERSION}-x86_64.AppImage"
+            "dist/ijevim-${VERSION}-x86_64.AppImage"
 
       # ── Upload ─────────────────────────────────────────────────
       - uses: actions/upload-artifact@v4
@@ -203,7 +203,7 @@ jobs:
         with:
           name: binary-${{ matrix.target }}
           path: binary/
-      - run: chmod +x binary/ivim
+      - run: chmod +x binary/ijevim
 
       - name: Version
         id: ver
@@ -223,10 +223,10 @@ jobs:
       - name: tar.gz
         if: matrix.format == 'tar-gz'
         run: |
-          mkdir -p "archive/ivim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
-          cp binary/ivim "$_"
-          tar czf "dist/ivim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}.tar.gz" \
-            -C archive "ivim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
+          mkdir -p "archive/ijevim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
+          cp binary/ijevim "$_"
+          tar czf "dist/ijevim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}.tar.gz" \
+            -C archive "ijevim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
 
       # ── tar.xz ──────────────────────────────────────────────────
       - name: Install xz
@@ -235,21 +235,21 @@ jobs:
       - name: tar.xz
         if: matrix.format == 'tar-xz'
         run: |
-          mkdir -p "archive/ivim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
-          cp binary/ivim "$_"
-          tar cJf "dist/ivim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}.tar.xz" \
-            -C archive "ivim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
+          mkdir -p "archive/ijevim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
+          cp binary/ijevim "$_"
+          tar cJf "dist/ijevim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}.tar.xz" \
+            -C archive "ijevim-${{ steps.ver.outputs.VERSION }}-${{ matrix.target }}"
 
       # ── DMG ─────────────────────────────────────────────────────
       - name: DMG
         if: matrix.format == 'dmg'
         run: |
           mkdir -p dmg
-          cp binary/ivim dmg/
+          cp binary/ijevim dmg/
           hdiutil create \
-            -volname "ivim ${{ steps.ver.outputs.VERSION }}" \
+            -volname "ijevim ${{ steps.ver.outputs.VERSION }}" \
             -srcfolder dmg -ov -format UDZO \
-            "dist/ivim-${{ steps.ver.outputs.VERSION }}-${{ steps.arch.outputs.sfx }}.dmg"
+            "dist/ijevim-${{ steps.ver.outputs.VERSION }}-${{ steps.arch.outputs.sfx }}.dmg"
 
       # ── Upload ─────────────────────────────────────────────────
       - uses: actions/upload-artifact@v4
@@ -292,9 +292,9 @@ jobs:
         if: matrix.format == 'zip'
         shell: bash
         run: |
-          ARCHIVE="ivim-${{ steps.ver.outputs.VERSION }}-x86_64-pc-windows-msvc"
+          ARCHIVE="ijevim-${{ steps.ver.outputs.VERSION }}-x86_64-pc-windows-msvc"
           mkdir -p "archive/$ARCHIVE"
-          cp target/release/ivim.exe "archive/$ARCHIVE/"
+          cp target/release/ijevim.exe "archive/$ARCHIVE/"
           7z a -tzip "dist/${ARCHIVE}.zip" "./archive/${ARCHIVE}/" > /dev/null
 
       # ── MSI ─────────────────────────────────────────────────────
@@ -309,7 +309,7 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          cargo wix --no-build -o "dist/ivim-${{ steps.ver.outputs.VERSION }}-x86_64.msi"
+          cargo wix --no-build -o "dist/ijevim-${{ steps.ver.outputs.VERSION }}-x86_64.msi"
 
       # ── Upload ─────────────────────────────────────────────────
       - uses: actions/upload-artifact@v4
@@ -353,21 +353,21 @@ jobs:
           cd release
 
           # x86_64 macOS archive
-          X86_TGZ="ivim-${VERSION}-x86_64-apple-darwin.tar.gz"
+          X86_TGZ="ijevim-${VERSION}-x86_64-apple-darwin.tar.gz"
           X86_SHA=""
           [ -f "$X86_TGZ" ] && X86_SHA=$(sha256sum "$X86_TGZ" | cut -d' ' -f1)
 
           # arm64 macOS archive
-          ARM_TGZ="ivim-${VERSION}-aarch64-apple-darwin.tar.gz"
+          ARM_TGZ="ijevim-${VERSION}-aarch64-apple-darwin.tar.gz"
           ARM_SHA=""
           [ -f "$ARM_TGZ" ] && ARM_SHA=$(sha256sum "$ARM_TGZ" | cut -d' ' -f1)
 
           # Linux x86_64 archive
-          LNX_TGZ="ivim-${VERSION}-x86_64-linux.tar.gz"
+          LNX_TGZ="ijevim-${VERSION}-x86_64-linux.tar.gz"
           LNX_SHA=""
           [ -f "$LNX_TGZ" ] && LNX_SHA=$(sha256sum "$LNX_TGZ" | cut -d' ' -f1)
 
-          cat > ../ivim.rb << RUBY
+          cat > ../ijevim.rb << RUBY
           class Ivim < Formula
             desc "A minimal Vim-like TUI editor written in Rust"
             homepage "https://github.com/NazoVim-org/ijevim"
@@ -391,28 +391,28 @@ jobs:
             end
 
             def install
-              bin.install "ivim"
+              bin.install "ijevim"
             end
 
             test do
-              system "#{bin}/ivim", "--version"
+              system "#{bin}/ijevim", "--version"
             end
           end
           RUBY
-          cp ../ivim.rb release/
+          cp ../ijevim.rb release/
 
       - name: Generate Arch Linux PKGBUILD
         run: |
           VERSION="${{ needs.version.outputs.version }}"
           cd release
 
-          LNX_TGZ="ivim-${VERSION}-x86_64-linux.tar.gz"
+          LNX_TGZ="ijevim-${VERSION}-x86_64-linux.tar.gz"
           LNX_SHA=""
           [ -f "$LNX_TGZ" ] && LNX_SHA=$(sha256sum "$LNX_TGZ" | cut -d' ' -f1)
 
           cat > ../PKGBUILD << PKG
           # Maintainer: NazoVim-org
-          pkgname=ivim
+          pkgname=ijevim
           pkgver=${VERSION}
           pkgrel=1
           pkgdesc="A minimal Vim-like TUI editor written in Rust"
@@ -423,7 +423,7 @@ jobs:
           source=("https://github.com/NazoVim-org/ijevim/releases/download/v\${pkgver}/${LNX_TGZ}")
           sha256sums=('${LNX_SHA}')
           package() {
-            install -Dm755 "ivim-\${pkgver}-x86_64-linux/ivim" "\${pkgdir}/usr/bin/ivim"
+            install -Dm755 "ijevim-\${pkgver}-x86_64-linux/ijevim" "\${pkgdir}/usr/bin/ijevim"
           }
           PKG
           cp ../PKGBUILD release/

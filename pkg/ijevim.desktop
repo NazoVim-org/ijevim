@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=ivim
+Name=ijevim
 Comment=A minimal Vim-like TUI editor written in Rust
-Exec=ivim %F
-Icon=ivim
+Exec=ijevim %F
+Icon=ijevim
 Terminal=true
 Type=Application
 Categories=Development;TextEditor;

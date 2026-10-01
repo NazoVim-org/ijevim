@@ -3,15 +3,15 @@ use ijevim::editor::Editor;
 use ijevim::types::{IjevimError, Keymap};
 
 const USAGE: &str =
-    "Usage: ivim [<file>] | ivim {vim|emacs} [<file>]\n       ivim --version | --help";
+    "Usage: ijevim [<file>] | ijevim {vim|emacs} [<file>]\n       ijevim --version | --help";
 
 const HELP: &str = "\
-ivim — a minimal Vim-like TUI editor
+ijevim — a minimal Vim-like TUI editor
 
 USAGE:
-    ivim [<file>]
-    ivim vim [<file>]
-    ivim emacs [<file>]
+    ijevim [<file>]
+    ijevim vim [<file>]
+    ijevim emacs [<file>]
 
 OPTIONS:
     -v, --version    Print version and exit
@@ -31,7 +31,7 @@ fn print_help() {
 }
 
 fn print_version() {
-    println!("ivim {}", env!("CARGO_PKG_VERSION"));
+    println!("ijevim {}", env!("CARGO_PKG_VERSION"));
 }
 
 /// Result of parsing command-line arguments.
@@ -49,12 +49,12 @@ enum CliAction {
 /// `args` should contain the raw program arguments **excluding** argv[0].
 ///
 /// Accepted shapes:
-/// - `ivim`
-/// - `ivim <file>`
-/// - `ivim vim [<file>]`
-/// - `ivim emacs [<file>]`
-/// - `ivim <file> vim`        (file first, mode after; preserved by old behaviour)
-/// - `ivim <file> vim <file2>` (subcommand file wins)
+/// - `ijevim`
+/// - `ijevim <file>`
+/// - `ijevim vim [<file>]`
+/// - `ijevim emacs [<file>]`
+/// - `ijevim <file> vim`        (file first, mode after; preserved by old behaviour)
+/// - `ijevim <file> vim <file2>` (subcommand file wins)
 ///
 /// Any token that is not a recognised flag or mode is treated as a file path,
 /// matching the pre-refactor `clap` behaviour.

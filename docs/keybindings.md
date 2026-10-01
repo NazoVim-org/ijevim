@@ -4,7 +4,7 @@ This document tracks keybinding behavior implemented in the current codebase.
 
 ## Vim keymap
 
-- Selected via `ivim vim [file]` (default).
+- Selected via `ijevim vim [file]` (default).
 - Full Vim-inspired modal editing: Normal, Insert, Visual, Command, Replace modes.
 - Key dispatch in `src/keymap/vim.rs` routes Ctrl+letter bindings and delegates mode-specific handling to methods on `Editor` (`handle_normal`, `handle_insert`, `handle_command`, `handle_visual`, `handle_replace`).
 - Vim state machine (pending operators, count prefix, text objects) lives in `Editor` fields.
@@ -32,7 +32,7 @@ This document tracks keybinding behavior implemented in the current codebase.
 
 ## Emacs keymap
 
-- Selected via `ivim emacs [file]`.
+- Selected via `ijevim emacs [file]`.
 - Modeless (always in editor mode), no explicit Normal/Insert distinction.
 - Key dispatch in `src/keymap/emacs.rs` handles Ctrl, Meta, prefix sequences, and literal keys.
 

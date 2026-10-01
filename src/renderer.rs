@@ -97,6 +97,17 @@ impl Renderer {
             self.screen.invalidate_all();
         }
 
+        // ── Welcome dashboard (shown when no file is loaded) ──
+        if state.show_dashboard && state.file_path.is_none() {
+            crate::dashboard::render_dashboard(&mut self.screen, rows, cols);
+            self.render_status_bar(rows, cols, state);
+            let ansi_output = self.screen.render();
+            if !ansi_output.is_empty() {
+                terminal.write_raw(ansi_output.as_bytes())?;
+            }
+            return Ok(());
+        }
+
         // ── Review mode uses its own rendering ──
         if let Some(rv) = review_state {
             crate::review::render::render_review(&mut self.screen, rv, rows, cols);
@@ -565,6 +576,8 @@ impl Renderer {
                 .unwrap_or_default()
         } else if state.mode == Mode::Command {
             format!(":{}", state.command_buffer)
+        } else if state.show_dashboard {
+            " DASHBOARD ".to_string()
         } else {
             let mode_label = if state.region_active {
                 if state.mark == Some(state.cursor) {

@@ -1,5 +1,6 @@
 pub mod buffer;
 pub mod config;
+pub(crate) mod dashboard;
 pub mod editor;
 pub(crate) mod engine;
 pub mod git;
